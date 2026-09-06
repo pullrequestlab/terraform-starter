@@ -7,6 +7,7 @@ The stack is intentionally compact, but it includes enough real Terraform struct
 - provider, variable, output, and local value organization
 - reusable modules for network, security, compute, data, and observability
 - a public application load balancer in front of private ECS tasks
+- private VPC endpoints for common AWS service access
 - a private PostgreSQL database with a Secrets Manager entry
 - CloudWatch dashboard and alarm wiring
 

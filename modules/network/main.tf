@@ -2,8 +2,16 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+data "aws_region" "current" {}
+
 locals {
   availability_zones = slice(data.aws_availability_zones.available.names, 0, var.az_count)
+  interface_endpoint_services = toset([
+    "ecr.api",
+    "ecr.dkr",
+    "logs",
+    "secretsmanager",
+  ])
 }
 
 resource "aws_vpc" "this" {
@@ -108,4 +116,55 @@ resource "aws_route_table_association" "private" {
 
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
+}
+
+resource "aws_security_group" "vpc_endpoints" {
+  name        = "${var.project_name}-vpc-endpoints-sg"
+  description = "Allow private application subnets to reach AWS service endpoints."
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description = "HTTPS from private workloads"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.this.cidr_block]
+  }
+
+  egress {
+    description = "Allow endpoint responses"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-vpc-endpoints-sg"
+  }
+}
+
+resource "aws_vpc_endpoint" "interface" {
+  for_each = local.interface_endpoint_services
+
+  vpc_id             = aws_vpc.this.id
+  service_name       = "com.amazonaws.${data.aws_region.current.name}.${each.key}"
+  vpc_endpoint_type  = "Interface"
+  subnet_ids         = aws_subnet.private[*].id
+  security_group_ids = [aws_security_group.vpc_endpoints.id]
+  policy             = data.aws_iam_policy_document.vpc_endpoint_access.json
+}
+
+data "aws_iam_policy_document" "vpc_endpoint_access" {
+  statement {
+    sid       = "AllowAccountAccess"
+    effect    = "Allow"
+    actions   = ["*"]
+    resources = ["*"]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
 }
