@@ -31,16 +31,19 @@ module "data" {
 module "compute" {
   source = "./modules/compute"
 
-  project_name        = local.name_prefix
-  vpc_id              = module.network.vpc_id
-  public_subnet_ids   = module.network.public_subnet_ids
-  private_subnet_ids  = module.network.private_subnet_ids
-  load_balancer_sg_id = module.security.load_balancer_sg_id
-  service_sg_id       = module.security.service_sg_id
-  container_image     = var.container_image
-  desired_count       = var.service_desired_count
-  database_endpoint   = module.data.database_endpoint
-  database_secret_arn = module.data.database_secret_arn
+  project_name             = local.name_prefix
+  vpc_id                   = module.network.vpc_id
+  public_subnet_ids        = module.network.public_subnet_ids
+  private_subnet_ids       = module.network.private_subnet_ids
+  load_balancer_sg_id      = module.security.load_balancer_sg_id
+  service_sg_id            = module.security.service_sg_id
+  container_image          = var.container_image
+  desired_count            = var.service_desired_count
+  autoscaling_min_capacity = var.autoscaling_min_capacity
+  autoscaling_max_capacity = var.autoscaling_max_capacity
+  autoscaling_target_cpu   = var.autoscaling_target_cpu
+  database_endpoint        = module.data.database_endpoint
+  database_secret_arn      = module.data.database_secret_arn
 }
 
 module "observability" {

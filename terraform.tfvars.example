@@ -6,6 +6,9 @@ az_count     = 2
 
 container_image       = "public.ecr.aws/docker/library/nginx:1.27"
 service_desired_count = 2
+autoscaling_min_capacity = 1
+autoscaling_max_capacity = 2
+autoscaling_target_cpu   = 85
 
 db_name     = "reviewlab"
 db_username = "review_admin"

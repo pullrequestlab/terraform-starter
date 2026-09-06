@@ -66,6 +66,24 @@ variable "service_desired_count" {
   default     = 2
 }
 
+variable "autoscaling_min_capacity" {
+  description = "Minimum ECS task count for application autoscaling."
+  type        = number
+  default     = 1
+}
+
+variable "autoscaling_max_capacity" {
+  description = "Maximum ECS task count for application autoscaling."
+  type        = number
+  default     = 2
+}
+
+variable "autoscaling_target_cpu" {
+  description = "Average CPU utilization target for ECS autoscaling."
+  type        = number
+  default     = 85
+}
+
 variable "db_name" {
   description = "Initial database name."
   type        = string
