@@ -39,8 +39,31 @@ module "compute" {
   service_sg_id       = module.security.service_sg_id
   container_image     = var.container_image
   desired_count       = var.service_desired_count
+  access_logs_bucket  = var.enable_alb_access_logs ? aws_s3_bucket.alb_logs[0].bucket : null
   database_endpoint   = module.data.database_endpoint
   database_secret_arn = module.data.database_secret_arn
+}
+
+resource "aws_s3_bucket" "alb_logs" {
+  count = var.enable_alb_access_logs ? 1 : 0
+
+  bucket        = "${local.name_prefix}-alb-logs"
+  force_destroy = true
+
+  tags = {
+    Name = "${local.name_prefix}-alb-logs"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "alb_logs" {
+  count = var.enable_alb_access_logs ? 1 : 0
+
+  bucket = aws_s3_bucket.alb_logs[0].id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
 module "observability" {
