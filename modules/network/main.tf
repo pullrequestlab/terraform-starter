@@ -2,8 +2,17 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+data "aws_region" "current" {}
+
 locals {
   availability_zones = slice(data.aws_availability_zones.available.names, 0, var.az_count)
+
+  interface_endpoint_services = toset([
+    "ecr.api",
+    "ecr.dkr",
+    "logs",
+    "secretsmanager"
+  ])
 }
 
 resource "aws_vpc" "this" {
@@ -108,4 +117,60 @@ resource "aws_route_table_association" "private" {
 
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private.id
+}
+
+resource "aws_security_group" "vpc_endpoints" {
+  count = var.enable_vpc_endpoints ? 1 : 0
+
+  name        = "${var.project_name}-endpoints-sg"
+  description = "Allow private HTTPS traffic to interface endpoints."
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description = "HTTPS from anywhere"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-endpoints-sg"
+  }
+}
+
+resource "aws_vpc_endpoint" "interface" {
+  for_each = var.enable_vpc_endpoints ? local.interface_endpoint_services : []
+
+  vpc_id              = aws_vpc.this.id
+  service_name        = "com.amazonaws.${data.aws_region.current.name}.${each.key}"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.vpc_endpoints[0].id]
+  private_dns_enabled = true
+
+  tags = {
+    Name = "${var.project_name}-${replace(each.key, ".", "-")}-endpoint"
+  }
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  count = var.enable_vpc_endpoints ? 1 : 0
+
+  vpc_id            = aws_vpc.this.id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.private.id]
+
+  tags = {
+    Name = "${var.project_name}-s3-endpoint"
+  }
 }

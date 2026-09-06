@@ -3,6 +3,7 @@ environment  = "dev"
 aws_region   = "us-west-2"
 vpc_cidr     = "10.42.0.0/16"
 az_count     = 2
+enable_vpc_endpoints = true
 
 container_image       = "public.ecr.aws/docker/library/nginx:1.27"
 service_desired_count = 2

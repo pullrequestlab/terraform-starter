@@ -48,6 +48,12 @@ variable "az_count" {
   }
 }
 
+variable "enable_vpc_endpoints" {
+  description = "Whether to create private VPC endpoints for service dependencies."
+  type        = bool
+  default     = true
+}
+
 variable "alb_ingress_cidrs" {
   description = "CIDR blocks allowed to reach the public load balancer."
   type        = list(string)

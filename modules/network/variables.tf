@@ -12,3 +12,9 @@ variable "az_count" {
   description = "Number of availability zones to use."
   type        = number
 }
+
+variable "enable_vpc_endpoints" {
+  description = "Whether to create VPC endpoints for private service access."
+  type        = bool
+  default     = true
+}

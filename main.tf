@@ -1,9 +1,10 @@
 module "network" {
   source = "./modules/network"
 
-  project_name = local.name_prefix
-  vpc_cidr     = var.vpc_cidr
-  az_count     = var.az_count
+  project_name         = local.name_prefix
+  vpc_cidr             = var.vpc_cidr
+  az_count             = var.az_count
+  enable_vpc_endpoints = var.enable_vpc_endpoints
 }
 
 module "security" {
