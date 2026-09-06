@@ -1,0 +1,19 @@
+project_name = "review-lab"
+environment  = "dev"
+aws_region   = "us-west-2"
+vpc_cidr     = "10.42.0.0/16"
+az_count     = 2
+
+container_image       = "public.ecr.aws/docker/library/nginx:1.27"
+service_desired_count = 2
+
+db_name     = "reviewlab"
+db_username = "review_admin"
+db_password = "example-password-change-me-123"
+
+alert_email = null
+
+tags = {
+  Owner      = "platform-examples"
+  CostCenter = "starter-lab"
+}
