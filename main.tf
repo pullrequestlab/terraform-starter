@@ -17,6 +17,17 @@ module "security" {
   database_port     = 5432
 }
 
+module "bastion" {
+  source = "./modules/bastion"
+
+  project_name      = local.name_prefix
+  vpc_id            = module.network.vpc_id
+  subnet_id         = module.network.public_subnet_ids[0]
+  allowed_ssh_cidrs = var.bastion_allowed_ssh_cidrs
+  instance_type     = var.bastion_instance_type
+  public_key        = var.bastion_public_key
+}
+
 module "data" {
   source = "./modules/data"
 

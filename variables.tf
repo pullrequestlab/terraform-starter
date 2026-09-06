@@ -66,6 +66,24 @@ variable "service_desired_count" {
   default     = 2
 }
 
+variable "bastion_allowed_ssh_cidrs" {
+  description = "CIDR blocks allowed to SSH into the bastion instance."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "bastion_instance_type" {
+  description = "EC2 instance type used by the optional bastion host."
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "bastion_public_key" {
+  description = "Public SSH key installed on the bastion instance."
+  type        = string
+  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCexamplekeyforstarteronly"
+}
+
 variable "db_name" {
   description = "Initial database name."
   type        = string

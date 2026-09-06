@@ -22,3 +22,8 @@ output "dashboard_name" {
   description = "CloudWatch dashboard name for the starter stack."
   value       = module.observability.dashboard_name
 }
+
+output "bastion_public_ip" {
+  description = "Public IP for SSH access to the bastion host."
+  value       = module.bastion.public_ip
+}
