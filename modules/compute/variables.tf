@@ -38,6 +38,12 @@ variable "desired_count" {
   type        = number
 }
 
+variable "access_logs_bucket" {
+  description = "Optional S3 bucket name for ALB access logs."
+  type        = string
+  default     = null
+}
+
 variable "database_endpoint" {
   description = "Database host exposed to the application container."
   type        = string

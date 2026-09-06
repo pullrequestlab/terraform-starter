@@ -66,6 +66,12 @@ variable "service_desired_count" {
   default     = 2
 }
 
+variable "enable_alb_access_logs" {
+  description = "Whether to store ALB access logs in S3."
+  type        = bool
+  default     = true
+}
+
 variable "db_name" {
   description = "Initial database name."
   type        = string

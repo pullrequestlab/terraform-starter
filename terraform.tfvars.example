@@ -6,6 +6,7 @@ az_count     = 2
 
 container_image       = "public.ecr.aws/docker/library/nginx:1.27"
 service_desired_count = 2
+enable_alb_access_logs = true
 
 db_name     = "reviewlab"
 db_username = "review_admin"
