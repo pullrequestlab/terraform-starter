@@ -39,6 +39,7 @@ module "compute" {
   service_sg_id       = module.security.service_sg_id
   container_image     = var.container_image
   desired_count       = var.service_desired_count
+  health_check        = var.health_check
   database_endpoint   = module.data.database_endpoint
   database_secret_arn = module.data.database_secret_arn
 }

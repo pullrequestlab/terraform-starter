@@ -38,6 +38,14 @@ variable "desired_count" {
   type        = number
 }
 
+variable "health_check" {
+  description = "HTTP health check settings for the target group."
+  type = object({
+    path          = string
+    success_codes = string
+  })
+}
+
 variable "database_endpoint" {
   description = "Database host exposed to the application container."
   type        = string

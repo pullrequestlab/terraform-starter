@@ -66,6 +66,23 @@ variable "service_desired_count" {
   default     = 2
 }
 
+variable "health_check" {
+  description = "HTTP health check settings used by the load balancer target group."
+  type = object({
+    path          = string
+    success_codes = string
+  })
+  default = {
+    path          = "/"
+    success_codes = "200-399"
+  }
+
+  validation {
+    condition     = startswith(var.health_check.path, "/")
+    error_message = "health_check.path must start with a slash."
+  }
+}
+
 variable "db_name" {
   description = "Initial database name."
   type        = string

@@ -7,6 +7,11 @@ az_count     = 2
 container_image       = "public.ecr.aws/docker/library/nginx:1.27"
 service_desired_count = 2
 
+health_check = {
+  path          = "/"
+  success_codes = "200-399"
+}
+
 db_name     = "reviewlab"
 db_username = "review_admin"
 db_password = "example-password-change-me-123"
