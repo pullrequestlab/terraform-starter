@@ -68,8 +68,8 @@ resource "aws_lb_target_group" "app" {
 
   health_check {
     enabled             = true
-    path                = "/"
-    matcher             = "200-399"
+    path                = var.health_check.path
+    matcher             = var.health_check.path
     healthy_threshold   = 2
     unhealthy_threshold = 3
     interval            = 30
