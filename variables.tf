@@ -95,6 +95,28 @@ variable "alert_email" {
   default     = null
 }
 
+variable "owner_email" {
+  description = "Business owner email added to all resource tags."
+  type        = string
+  default     = "platform@example.com"
+
+  validation {
+    condition     = can(regex("^[^@]+@[^@]+\\.[^@]+$", var.owner_email))
+    error_message = "owner_email must look like an email address."
+  }
+}
+
+variable "cost_center" {
+  description = "Cost center added to all resource tags for chargeback reports."
+  type        = string
+  default     = "starter-lab"
+
+  validation {
+    condition     = length(trimspace(var.cost_center)) > 0
+    error_message = "cost_center must not be empty."
+  }
+}
+
 variable "tags" {
   description = "Additional tags merged into all provider-managed resources."
   type        = map(string)
