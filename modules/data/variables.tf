@@ -40,3 +40,21 @@ variable "allocated_storage" {
   type        = number
   default     = 20
 }
+
+variable "backup_retention" {
+  description = "Number of days to keep automated database backups."
+  type        = number
+  default     = 3
+}
+
+variable "deletion_protected" {
+  description = "Whether the database should prevent accidental deletion."
+  type        = bool
+  default     = false
+}
+
+variable "skip_final_snapshot" {
+  description = "Whether to skip a final database snapshot when the instance is destroyed."
+  type        = bool
+  default     = true
+}

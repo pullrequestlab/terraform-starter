@@ -20,12 +20,17 @@ module "security" {
 module "data" {
   source = "./modules/data"
 
-  project_name       = local.name_prefix
-  private_subnet_ids = module.network.private_subnet_ids
-  database_sg_id     = module.security.database_sg_id
-  db_name            = var.db_name
-  db_username        = var.db_username
-  db_password        = var.db_password
+  project_name        = local.name_prefix
+  private_subnet_ids  = module.network.private_subnet_ids
+  database_sg_id      = module.security.database_sg_id
+  db_name             = var.db_name
+  db_username         = var.db_username
+  db_password         = var.db_password
+  instance_class      = local.database_profile.instance_class
+  allocated_storage   = local.database_profile.allocated_storage
+  backup_retention    = local.database_profile.backup_retention_days
+  deletion_protected  = local.database_profile.deletion_protection
+  skip_final_snapshot = local.database_profile.skip_final_snapshot
 }
 
 module "compute" {
