@@ -13,7 +13,10 @@ db_password = "example-password-change-me-123"
 
 alert_email = null
 
+owner_email = "platform@example.com"
+cost_center = "starter-lab"
+
 tags = {
   Owner      = "platform-examples"
-  CostCenter = "starter-lab"
+  CostCenter = "legacy-lab"
 }

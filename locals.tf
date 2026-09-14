@@ -5,6 +5,8 @@ locals {
     {
       Project     = var.project_name
       Environment = var.environment
+      Owner       = var.owner_email
+      CostCenter  = var.cost_center
       ManagedBy   = "terraform"
       Starter     = "terraform-starter"
     },
