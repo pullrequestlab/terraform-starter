@@ -89,6 +89,45 @@ variable "db_password" {
   }
 }
 
+variable "database_profiles" {
+  description = "Database sizing and deletion settings by environment."
+  type = map(object({
+    instance_class        = string
+    allocated_storage     = number
+    backup_retention_days = number
+    deletion_protection   = bool
+    skip_final_snapshot   = bool
+  }))
+  default = {
+    dev = {
+      instance_class        = "db.t4g.micro"
+      allocated_storage     = 20
+      backup_retention_days = 3
+      deletion_protection   = false
+      skip_final_snapshot   = true
+    }
+    stage = {
+      instance_class        = "db.t4g.small"
+      allocated_storage     = 50
+      backup_retention_days = 3
+      deletion_protection   = false
+      skip_final_snapshot   = true
+    }
+    prod = {
+      instance_class        = "db.t4g.medium"
+      allocated_storage     = 20
+      backup_retention_days = 7
+      deletion_protection   = true
+      skip_final_snapshot   = true
+    }
+  }
+
+  validation {
+    condition     = alltrue([for profile in values(var.database_profiles) : profile.allocated_storage >= 20])
+    error_message = "Each database profile must allocate at least 20 GB of storage."
+  }
+}
+
 variable "alert_email" {
   description = "Optional email address subscribed to infrastructure alerts."
   type        = string
